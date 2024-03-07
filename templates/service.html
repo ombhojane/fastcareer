@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Re-Entry Readiness Test</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+  /* Custom styles for improved layout */
+  .question-section {
+    margin-top: 2rem; /* Adds space above the question section */
+  }
+  /* Styles for the progress bar */
+  #progressBar {
+    height: 20px;
+    background-color: #f3f4f6; /* Light grey */
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  #progressBarInner {
+    height: 100%;
+    background-color: #10b981; /* Tailwind's green-500 */
+    width: 0%; /* Initial width */
+    border-radius: 8px;
+    transition: width 0.3s ease;
+  }
+</style>
+</head>
+<body>
+<div class="min-h-screen bg-gray-100 p-8">
+  <div class="flex justify-between items-center mb-4">
+    <div class="text-green-500 font-bold text-xl">Career Restart.</div>
+    <div class="text-sm font-medium">Empowering your journey back to the workforce</div>
+    <button class="text-gray-700 cursor-pointer">Exit</button>
+  </div>
+
+  <div class="grid grid-cols-4 gap-4 mb-4">
+    <div id="aboutYouTab" class="bg-green-400 text-white text-center py-2 px-4 rounded">About You</div>
+    <div id="coreValuesTab" class="bg-white text-gray-800 text-center py-2 px-4 rounded shadow">Core Values</div>
+    <div id="strengthTab" class="bg-white text-gray-800 text-center py-2 px-4 rounded shadow">Strengths</div>
+    <div class="bg-white text-gray-800 text-center py-2 px-4 rounded shadow">Skill Assessment</div>
+  </div>
+
+  <div id="progressBar" class="mb-4">
+    <div id="progressBarInner"></div>
+  </div>
+
+  <div class="question-section">
+    <div class="flex justify-between mb-2">
+      <button id="prevBtn" class="text-gray-500 bg-transparent hover:bg-gray-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center">
+        <i class="fas fa-arrow-left mr-2"></i> Previous
+      </button>
+      <button id="nextBtn" class="text-gray-500 bg-transparent hover:bg-gray-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center">
+        Next <i class="fas fa-arrow-right ml-2"></i>
+      </button>
+    </div>
+  
+    <div id="questionsContainer" class="space-y-4">
+      <!-- Questions will be dynamically inserted here -->
+    </div>
+  </div>
+</div>
+<script>
+    let currentQuestionIndex = 1;
+    let currentSectionIndex = 0;
+    let userResponses = {}; 
+
+    const sections = [
+      { // About You Section
+        questions: [
+          { label: "What is your name?", type: "text", id: "name" },
+          { label: "What is your mobile number?", type: "number", id: "mobile" },
+          { label: "What is your email ID?", type: "email", id: "email" },
+          { label: "Your LinkedIn (optional)", type: "text", id: "linkedin" },
+          { label: "Your GitHub (optional)", type: "text", id: "github" }
+        ]
+      },
+      { // Core Values Section
+        questions: [
+          { label: "What annoys you or gets under your skin at work?", type: "text", id: "annoyance" },
+          { label: "What brings you joy in your work?", type: "text", id: "joy" },
+          { label: "What could you not live without in a workplace or on a work team?", type: "text", id: "necessity" },
+          { label: "Who do you admire and what do you admire about them?", type: "text", id: "admire" }
+        ]
+      },
+      { // Strength Section modified with grouped questions for Exercise 2
+    questions: [
+      { label: "Strength Exercise 1 - Self Assessment: What do you enjoy the most?", type: "text", id: "enjoyMost" },
+      { label: "What am I called on to do most often?", type: "text", id: "calledOn" },
+      { label: "What do I do best?", type: "text", id: "doBest" },
+      { label: "What advice or expertise do others seek from me?", type: "text", id: "adviceSought" },
+      {
+        // Strength Exercise 2 treated as a single question group for display purposes
+        type: "group", // Custom type to handle grouped inputs
+        questions: [
+          { label: "Story 1", type: "text", id: "story1" },
+          { label: "Feedback for Story 1", type: "text", id: "feedback1" },
+          { label: "Story 2", type: "text", id: "story2" },
+          { label: "Feedback for Story 2", type: "text", id: "feedback2" }
+        ]
+      }
+    ]
+  }
+      // Additional sections can be added here.
+    ];
+    
+    function saveResponse(questionId, response) {
+  userResponses[questionId] = response;
+  localStorage.setItem("userResponses", JSON.stringify(userResponses)); // Save to localStorage
+}
+
+    function updateProgress() {
+      // Calculate the overall progress based on the total number of questions.
+      const totalQuestions = sections.reduce((total, section) => total + section.questions.length, 0);
+      let questionsCompleted = sections.slice(0, currentSectionIndex).reduce((total, section) => total + section.questions.length, 0) + currentQuestionIndex;
+      const progressPercentage = (questionsCompleted / totalQuestions) * 100;
+      document.getElementById('progressBarInner').style.width = `${progressPercentage}%`;
+    }
+    
+    function updateSectionTabs() {
+      // Update the color of tabs based on their completion status.
+      const tabIds = ['aboutYouTab', 'coreValuesTab', 'strengthTab']; // Add more as needed
+      tabIds.forEach((id, index) => {
+        if (index < currentSectionIndex) {
+          document.getElementById(id).className = "bg-green-400 text-white text-center py-2 px-4 rounded";
+        } else if (index === currentSectionIndex) {
+          document.getElementById(id).className = "bg-yellow-400 text-white text-center py-2 px-4 rounded";
+        } else {
+          document.getElementById(id).className = "bg-white text-gray-800 text-center py-2 px-4 rounded shadow";
+        }
+      });
+    }
+    
+    function createQuestionHTML(question) {
+  if (question.type === "group") {
+    // Handling grouped questions (for Exercise 2)
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'question-group';
+    question.questions.forEach(subQuestion => {
+      const questionContent = createQuestionHTML(subQuestion); // Recursively call to generate each input
+      groupDiv.appendChild(questionContent);
+    });
+    return groupDiv;
+  } else {
+    // Standard question handling
+    const questionDiv = document.createElement('div');
+    questionDiv.className = 'question';
+    
+    const label = document.createElement('label');
+    label.setAttribute('for', question.id);
+    label.className = 'block text-gray-700 text-sm font-bold mb-2';
+    label.textContent = question.label;
+  
+    const input = document.createElement('input');
+    input.type = question.type;
+    input.id = question.id;
+    input.placeholder = question.label;
+    input.className = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
+  
+    input.addEventListener('change', function() {
+    saveResponse(question.id, input.value); // Save response when input changes
+  });
+
+    questionDiv.appendChild(label);
+    questionDiv.appendChild(input);
+    
+    return questionDiv;
+  }
+}
+
+
+
+function showQuestion(index) {
+  const questionsContainer = document.getElementById('questionsContainer');
+  questionsContainer.innerHTML = ''; // Clear previous content
+
+  const section = sections[currentSectionIndex];
+  if (section.questions[index - 1].type === "group") {
+    // If the question is a group, render all its questions together
+    const groupHTML = createQuestionHTML(section.questions[index - 1]);
+    questionsContainer.appendChild(groupHTML);
+  } else {
+    // For non-grouped questions, proceed as normal
+    const questionHTML = createQuestionHTML(section.questions[index - 1]);
+    questionsContainer.appendChild(questionHTML);
+  }
+
+  updateProgress(); // Ensure progress is updated
+}
+
+document.getElementById('prevBtn').addEventListener('click', function() {
+  // Adjusted to account for grouped questions as a single index
+  if (currentQuestionIndex > 1) {
+    currentQuestionIndex--;
+    showQuestion(currentQuestionIndex);
+  } else if (currentSectionIndex > 0) {
+    // Navigate to previous section if applicable
+    currentSectionIndex--;
+    currentQuestionIndex = sections[currentSectionIndex].questions.length;
+    showQuestion(currentQuestionIndex);
+  }
+  updateSectionTabs();
+});
+
+document.getElementById('nextBtn').addEventListener('click', function() {
+  // Adjusted to account for grouped questions as a single index
+  const sectionQuestions = sections[currentSectionIndex].questions;
+  if (currentQuestionIndex < sectionQuestions.length) {
+    currentQuestionIndex++;
+    showQuestion(currentQuestionIndex);
+  } else if (currentSectionIndex < sections.length - 1) {
+    // Move to next section if available
+    currentSectionIndex++;
+    currentQuestionIndex = 1;
+    showQuestion(currentQuestionIndex);
+  }
+  updateSectionTabs();
+});
+
+    
+    // Initial display and setup
+    showQuestion(currentQuestionIndex);
+updateSectionTabs();
+updateProgress();
+
+    </script>
+    
+</body>
+</html>
