@@ -69,6 +69,12 @@
         </div>
       </div>
     </main>
+    <div id="processedResponses" class="processed-responses">
+      <!-- Processed responses will be displayed here -->
+  </div>
+  <button id="processBtn" class="process-btn">Process Responses</button>
+
+  
 </div>
 <script>
     let currentQuestionIndex = 1;
@@ -395,6 +401,27 @@ function addMoreRepeatableGroup(groupIndex) {
 
 }
 
+function displayProcessedResponses() {
+    const processedDiv = document.getElementById('processedResponses');
+    processedDiv.innerHTML = ''; // Clear previous content
+
+    let content = '<h2 class="text-xl font-semibold mb-4">Processed Responses</h2>';
+    content += '<ul>';
+
+    // Iterate through userResponses to build content
+    for (const [questionId, response] of Object.entries(userResponses)) {
+        // For simplicity, we're directly using questionId and response
+        // In a real application, you might want to map questionId to a more readable format or question text
+        content += `<li><strong>${questionId}:</strong> ${response}</li>`;
+    }
+
+    content += '</ul>';
+
+    // Set the processed content
+    processedDiv.innerHTML = content;
+}
+
+
 function createSubQuestionHTML(question, uniqueId) {
   const questionDiv = document.createElement('div');
   questionDiv.className = 'question';
@@ -591,12 +618,14 @@ function displayResponses() {
 document.getElementById('saveBtn').addEventListener('click', saveResponses);
 document.getElementById('displayBtn').addEventListener('click', displayResponses);
 
+document.getElementById('processBtn').addEventListener('click', function() {
+    displayProcessedResponses();
+});
 
 
 loadResponses();
 document.addEventListener('DOMContentLoaded', function() {
     attachChangeEventToInputs();
-    // Any other initialization code can go here
 });
 
 
