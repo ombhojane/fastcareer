@@ -32,6 +32,8 @@
         <div id="prioritiesTab" class="bg-white text-gray-800 font-semibold text-center py-5 px-4 rounded-lg shadow-md cursor-pointer">Career Priorities</div>
       </div>
 
+      
+
       <div class="mb-8 max-w-2xl mx-auto px-4">
         <div id="progressBar">
           <div id="progressCounter">0%</div>
@@ -58,8 +60,11 @@
           </div>
         </div>
         <div class="flex justify-center mt-8">
-          <button id="saveBtn" class="text-green-500 border bg-transparent hover:bg-green-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center">
+          <button id="saveBtn" class="text-blue-500 bg-transparent hover:bg-blue-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center">
             Save Responses
+          </button>
+          <button id="displayBtn" class="text-green-500 bg-transparent hover:bg-green-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center">
+            Display
           </button>
         </div>
       </div>
@@ -67,9 +72,9 @@
 </div>
 <script>
     let currentQuestionIndex = 1;
-    let currentSectionIndex = 0;
-    let userResponses = {}; 
-    let repeatableGroupCounter = {};
+let currentSectionIndex = 0;
+let userResponses = {};
+let repeatableGroupCounter = {};
 
     const sections = [
       { // About You Section
@@ -291,26 +296,16 @@
   }
 ];
     
-    function saveResponse(questionId, response) {
-  const [sectionIndex, questionIndex, groupIndex] = questionId.split('-');
+function saveResponse(questionId, response) {
+    // Save response using the questionId as the key
+    userResponses[questionId] = response;
 
-  if (!userResponses[sectionIndex]) {
-    userResponses[sectionIndex] = {};
-  }
-
-  if (!userResponses[sectionIndex][questionIndex]) {
-    userResponses[sectionIndex][questionIndex] = {};
-  }
-
-  if (groupIndex) {
-    if (!userResponses[sectionIndex][questionIndex][groupIndex]) {
-      userResponses[sectionIndex][questionIndex][groupIndex] = {};
-    }
-    userResponses[sectionIndex][questionIndex][groupIndex][questionId] = response;
-  } else {
-    userResponses[sectionIndex][questionIndex][questionId] = response;
-  }
+    // Update localStorage with the new state of userResponses
+    localStorage.setItem("userResponses", JSON.stringify(userResponses));
 }
+
+
+
 
 function saveResponses() {
   const sectionQuestions = sections[currentSectionIndex].questions;
@@ -345,6 +340,14 @@ function updateProgress() {
   const progressCounter = document.getElementById('progressCounter');
   progressCounter.textContent = `${Math.round(progressPercentage)}%`;
 }
+
+function loadResponses() {
+  const savedResponses = localStorage.getItem("userResponses");
+  if (savedResponses) {
+    userResponses = JSON.parse(savedResponses);
+  }
+}
+
 
     
 function updateSectionTabs() {
@@ -403,7 +406,9 @@ function createSubQuestionHTML(question, uniqueId) {
 
   const input = document.createElement('input');
   input.type = question.type;
-  input.id = uniqueId;
+  // In your createSubQuestionHTML function and similar
+input.id = `${sectionIndex}-${questionIndex}-${question.id}`; // Adjust if necessary to match your structure
+
   input.placeholder = question.label;
   input.className = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
 
@@ -545,6 +550,57 @@ function createQuestionHTML(question, parentIndex = "") {
     return questionDiv;
   }
 }
+function attachChangeEventToInputs() {
+    document.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], textarea').forEach(input => {
+        input.addEventListener('change', function() {
+            // Construct a unique questionId based on the input's ID
+            const questionId = this.id;
+            const response = this.value;
+            saveResponse(questionId, response);
+        });
+    });
+}
+
+function displayResponses() {
+    const questionsContainer = document.getElementById('questionsContainer');
+    questionsContainer.innerHTML = ''; // Clear previous content
+
+    sections.forEach((section, sectionIndex) => {
+        section.questions.forEach((question, questionIndex) => {
+            const questionId = question.id; // Assuming question IDs are unique across sections
+
+            const response = userResponses[questionId] || 'Not provided';
+
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'mb-4 p-4 bg-gray-100 rounded';
+
+            const questionLabel = document.createElement('h3');
+            questionLabel.className = 'text-lg font-semibold mb-2';
+            questionLabel.textContent = question.label;
+            questionDiv.appendChild(questionLabel);
+
+            const responseText = document.createElement('p');
+            responseText.textContent = `Answer: ${response}`;
+            questionDiv.appendChild(responseText);
+
+            questionsContainer.appendChild(questionDiv);
+        });
+    });
+}
+
+document.getElementById('saveBtn').addEventListener('click', saveResponses);
+document.getElementById('displayBtn').addEventListener('click', displayResponses);
+
+
+
+loadResponses();
+document.addEventListener('DOMContentLoaded', function() {
+    attachChangeEventToInputs();
+    // Any other initialization code can go here
+});
+
+
+
 
 
 function showQuestion(index) {
@@ -599,6 +655,10 @@ document.getElementById('nextBtn').addEventListener('click', function() {
     showQuestion(currentQuestionIndex);
 updateSectionTabs();
 updateProgress();
+
+console.log("Saving response for", questionId, response);
+console.log("Displaying responses", userResponses);
+
 
     </script>
     
