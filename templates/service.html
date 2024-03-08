@@ -6,65 +6,70 @@
 <title>Career Re-Entry Readiness Test</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<style>
-  /* Custom styles for improved layout */
-  .question-section {
-    margin-top: 2rem; /* Adds space above the question section */
-  }
-  /* Styles for the progress bar */
-  #progressBar {
-    height: 20px;
-    background-color: #f3f4f6; /* Light grey */
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  #progressBarInner {
-    height: 100%;
-    background-color: #10b981; /* Tailwind's green-500 */
-    width: 0%; /* Initial width */
-    border-radius: 8px;
-    transition: width 0.3s ease;
-  }
-</style>
+<link rel="stylesheet" href="/static\css\style.css">
+
 </head>
-<body>
-<div class="min-h-screen bg-gray-100 p-8">
-  <div class="flex justify-between items-center mb-4">
-    <div class="text-green-500 font-bold text-xl">Career Restart.</div>
-    <div class="text-sm font-medium">Empowering your journey back to the workforce</div>
-    <button class="text-gray-700 cursor-pointer">Exit</button>
-  </div>
+<body class="bg-gray-100">
+  <div class="container mx-auto px-4 py-8">
+    <header class="mb-8 bg-green-500 text-white py-4 px-6 rounded-lg">
+      <div class="flex justify-between items-center mb-2">
+        <div>
+          <h1 class="font-bold text-2xl">Career Restart.</h1>
+          <p class="text-sm">Empowering your journey back to the workforce</p>
+        </div>
+        <button class="text-white hover:text-green-950 focus:outline-none">Exit</button>
+      </div>
+    </header>
 
-  <div class="grid grid-cols-4 gap-4 mb-4">
-    <div id="aboutYouTab" class="bg-green-400 text-white text-center py-2 px-4 rounded">About You</div>
-    <div id="coreValuesTab" class="bg-white text-gray-800 text-center py-2 px-4 rounded shadow">Core Values</div>
-    <div id="strengthTab" class="bg-white text-gray-800 text-center py-2 px-4 rounded shadow">Strengths</div>
-    <div class="bg-white text-gray-800 text-center py-2 px-4 rounded shadow">Skill Assessment</div>
-  </div>
+    <main>
+      <div class="grid grid-cols-4 gap-4 mb-8 max-w-4xl mx-auto px-8">
+        <div id="aboutYouTab" class="bg-green-500 text-white font-semibold text-center py-5 px-4 rounded-lg shadow-md cursor-pointer">About You</div>
+        <div id="coreValuesTab" class="bg-white text-gray-800 font-semibold text-center py-5 px-4 rounded-lg shadow-md cursor-pointer">Core Values</div>
+        <div id="strengthTab" class="bg-white text-gray-800 font-semibold text-center py-5 px-4 rounded-lg shadow-md cursor-pointer">Strengths</div>
+        <div id="skillsAssessmentTab" class="bg-white text-gray-800 font-semibold text-center py-5 px-4 rounded-lg shadow-md cursor-pointer">Skill Assessment</div>
+        <div id="dreamjobTab" class="bg-white text-gray-800 font-semibold text-center py-5 px-4 rounded-lg shadow-md cursor-pointer">Dream Job</div>
+        <div id="preferencesTab" class="bg-white text-gray-800 font-semibold text-center py-5 px-4 rounded-lg shadow-md cursor-pointer">Preferences</div>
+        <div id="prioritiesTab" class="bg-white text-gray-800 font-semibold text-center py-5 px-4 rounded-lg shadow-md cursor-pointer">Career Priorities</div>
+      </div>
 
-  <div id="progressBar" class="mb-4">
-    <div id="progressBarInner"></div>
-  </div>
+      <div class="mb-8 max-w-2xl mx-auto px-4">
+        <div id="progressBar">
+          <div id="progressCounter">0%</div>
+          <div id="progressBarInner"></div>
+        </div>
+      </div>
 
-  <div class="question-section">
-    <div class="flex justify-between mb-2">
-      <button id="prevBtn" class="text-gray-500 bg-transparent hover:bg-gray-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center">
-        <i class="fas fa-arrow-left mr-2"></i> Previous
-      </button>
-      <button id="nextBtn" class="text-gray-500 bg-transparent hover:bg-gray-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center">
-        Next <i class="fas fa-arrow-right ml-2"></i>
-      </button>
-    </div>
-  
-    <div id="questionsContainer" class="space-y-4">
-      <!-- Questions will be dynamically inserted here -->
-    </div>
-  </div>
+      <div class="question-section max-w-2xl mx-auto px-4 bg-white rounded-lg shadow-md p-6">
+        <div class="flex justify-between mb-4">
+          <button id="prevBtn" class="text-gray-500 bg-transparent hover:bg-gray-200 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i> Previous
+          </button>
+          <button id="nextBtn" class="text-gray-500 bg-transparent hover:bg-gray-200 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center">
+            Next <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+
+        <div id="questionsContainer" class="space-y-6">
+          <!-- Questions will be dynamically inserted here -->
+          <div class="question-container">
+            <h2 class="text-lg font-semibold mb-2">Question Title</h2>
+            <p class="text-gray-700 text-base mb-4">Question description goes here...</p>
+            <input type="text" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter your response">
+          </div>
+        </div>
+        <div class="flex justify-center mt-8">
+          <button id="saveBtn" class="text-green-500 border bg-transparent hover:bg-green-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center">
+            Save Responses
+          </button>
+        </div>
+      </div>
+    </main>
 </div>
 <script>
     let currentQuestionIndex = 1;
     let currentSectionIndex = 0;
     let userResponses = {}; 
+    let repeatableGroupCounter = {};
 
     const sections = [
       { // About You Section
@@ -99,76 +104,447 @@
           { label: "Story 2", type: "text", id: "story2" },
           { label: "Feedback for Story 2", type: "text", id: "feedback2" }
         ]
+      },
+      { // Strengths Exercise 3 - Added as a repeatable group
+            type: "repeatableGroup",
+            baseId: "feedback3", // Base ID to help generate unique IDs
+            repeatable: true, // Mark this group as repeatable
+            questions: [
+              { label: "Name", type: "text", id: "Name" },
+              { label: "Role", type: "text", id: "Role" },
+              { label: "What tasks am I best at?", type: "text", id: "bestTasks" },
+              { label: "How would you describe me to others?", type: "text", id: "describe" },
+              { label: "What are not my strengths?", type: "text", id: "notStrengths" },
+              { label: "Preferred roles in projects?", type: "text", id: "preferredRoles" }
+            ]
+          }
+    ]
+  },
+  {
+    // Skills and Experience Exercise Section
+    questions: [
+      {
+        label: "Job: Title or description – where and when?",
+        type: "text",
+        id: "jobDescription"
+      },
+      {
+        label: "Skills and experience: Direct or transferable",
+        type: "text",
+        id: "skillsExperience"
+      },
+      {
+        label: "Accomplishments: Measurable; if possible include examples like percentage of goal, dollars in sales, revenue growth, or savings; number of employees hired or trained",
+        type: "text",
+        id: "accomplishments"
+      },
+      {
+        label: "Benefit to the Employer: how your skills and/or experience benefit the organization and its people",
+        type: "text",
+        id: "benefitToEmployer"
+      }
+    ]
+  },
+
+  {//dream job
+    questions: [
+      {
+        label: "If there were no restrictions (for example, education, location, experience, or financial obligations), my dream job would be:",
+        type: "text",
+        id: "d1"
+      },
+      {
+        label: "Is obtaining this dream job a realistic possibility for me?",
+        type: "radio",
+        id: "realisticPossibility",
+        options: [
+          { label: "Yes", value: "yes" },
+          { label: "No", value: "no" }
+        ]
+      },
+      {
+        label: "If yes, explain how.",
+        type: "text",
+        id: "d3"
+      },
+      {
+        label: "List at least ten specific attributes of this dream job (for example, content, culture, mission, responsibilities, or perks), as you imagine it, that appeal to you:",
+        type: "text",
+        id: "d4"
+      },
+      {
+        label: "Working in this dream job would make me feel",
+        type: "text",
+        id: "d5"
+      },
+      {
+        label: "Working this dream job would fill my need(s) for",
+        type: "text",
+        id: "d6"
+      },
+      {
+        label: "Working in this dream job would meet my goal(s) of",
+        type: "text",
+        id: "d7"
+      },
+
+    ]
+  },
+  {
+    // Preference Section
+    questions: [
+      {
+        type: "section",
+        title: "Size of Organization",
+        questions: [
+          { label: "What I think I want", type: "text", id: "sizeWant" },
+          { label: "What I know I don't want", type: "text", id: "sizeNotWant" }
+        ]
+      },
+      {
+        type: "section",
+        title: "Type of Organization",
+        questions: [
+          { label: "What I think I want", type: "text", id: "typeWant" },
+          { label: "What I know I don't want", type: "text", id: "typeNotWant" }
+        ]
+      },
+      {
+        type: "section",
+        title: "Industry",
+        questions: [
+          { label: "What I think I want", type: "text", id: "industryWant" },
+          { label: "What I know I don't want", type: "text", id: "industryNotWant" }
+        ]
+      },
+      {
+        type: "section",
+        title: "Department",
+        questions: [
+          { label: "What I think I want", type: "text", id: "departmentWant" },
+          { label: "What I know I don't want", type: "text", id: "departmentNotWant" }
+        ]
+      },
+      {
+        type: "section",
+        title: "Function",
+        questions: [
+          { label: "What I think I want", type: "text", id: "functionWant" },
+          { label: "What I know I don't want", type: "text", id: "functionNotWant" }
+        ]
+      }
+    ]
+  
+  },
+  {
+    // Career Priorities Section
+    questions: [
+      {
+        label: "Rate and Explain: Money",
+        type: "rating",
+        id: "money",
+        explanationLabel: "Why is this important to you?"
+      },
+      {
+        label: "Rate and Explain: Benefits",
+        type: "rating",
+        id: "benefits",
+        explanationLabel: "Why is this important to you?"
+      },
+      {
+        label: "Rate and Explain: Creative control",
+        type: "rating",
+        id: "creativeControl",
+        explanationLabel: "Why is this important to you?"
+      },
+      {
+        label: "Rate and Explain: Flexible work options",
+        type: "rating",
+        id: "flexibleWork",
+        explanationLabel: "Why is this important to you?"
+      },
+      {
+        label: "Rate and Explain: Proximity to home/school/daycare",
+        type: "rating",
+        id: "proximity",
+        explanationLabel: "Why is this important to you?"
+      },
+      {
+        label: "Rate and Explain: Challenge",
+        type: "rating",
+        id: "challenge",
+        explanationLabel: "Why is this important to you?"
+      },
+      {
+        label: "Rate and Explain: Social connections and camaraderie",
+        type: "rating",
+        id: "socialConnections",
+        explanationLabel: "Why is this important to you?"
+      },
+      {
+        label: "Rate and Explain: Measurable success",
+        type: "rating",
+        id: "measurableSuccess",
+        explanationLabel: "Why is this important to you?"
       }
     ]
   }
-      // Additional sections can be added here.
-    ];
+];
     
     function saveResponse(questionId, response) {
-  userResponses[questionId] = response;
-  localStorage.setItem("userResponses", JSON.stringify(userResponses)); // Save to localStorage
+  const [sectionIndex, questionIndex, groupIndex] = questionId.split('-');
+
+  if (!userResponses[sectionIndex]) {
+    userResponses[sectionIndex] = {};
+  }
+
+  if (!userResponses[sectionIndex][questionIndex]) {
+    userResponses[sectionIndex][questionIndex] = {};
+  }
+
+  if (groupIndex) {
+    if (!userResponses[sectionIndex][questionIndex][groupIndex]) {
+      userResponses[sectionIndex][questionIndex][groupIndex] = {};
+    }
+    userResponses[sectionIndex][questionIndex][groupIndex][questionId] = response;
+  } else {
+    userResponses[sectionIndex][questionIndex][questionId] = response;
+  }
 }
 
-    function updateProgress() {
-      // Calculate the overall progress based on the total number of questions.
-      const totalQuestions = sections.reduce((total, section) => total + section.questions.length, 0);
-      let questionsCompleted = sections.slice(0, currentSectionIndex).reduce((total, section) => total + section.questions.length, 0) + currentQuestionIndex;
-      const progressPercentage = (questionsCompleted / totalQuestions) * 100;
-      document.getElementById('progressBarInner').style.width = `${progressPercentage}%`;
-    }
+function saveResponses() {
+  const sectionQuestions = sections[currentSectionIndex].questions;
+  if (currentQuestionIndex < sectionQuestions.length) {
+    currentQuestionIndex++;
+    showQuestion(currentQuestionIndex);
+  } else if (currentSectionIndex < sections.length - 1) {
+    currentSectionIndex++;
+    currentQuestionIndex = 1;
+    showQuestion(currentQuestionIndex);
+  }
+  updateSectionTabs();
+  updateProgress();
+}
+
+document.getElementById('saveBtn').addEventListener('click', saveResponses);
+
+
+// Add event listener to the Save button
+document.getElementById('saveBtn').addEventListener('click', saveResponses);
+
+function updateProgress() {
+  // Calculate the overall progress based on the total number of questions.
+  const totalQuestions = sections.reduce((total, section) => total + section.questions.length, 0);
+  let questionsCompleted = sections.slice(0, currentSectionIndex).reduce((total, section) => total + section.questions.length, 0) + currentQuestionIndex;
+  const progressPercentage = (questionsCompleted / totalQuestions) * 100;
+
+  // Update progress bar width
+  document.getElementById('progressBarInner').style.width = `${progressPercentage}%`;
+
+  // Update progress counter text
+  const progressCounter = document.getElementById('progressCounter');
+  progressCounter.textContent = `${Math.round(progressPercentage)}%`;
+}
+
     
-    function updateSectionTabs() {
-      // Update the color of tabs based on their completion status.
-      const tabIds = ['aboutYouTab', 'coreValuesTab', 'strengthTab']; // Add more as needed
-      tabIds.forEach((id, index) => {
-        if (index < currentSectionIndex) {
-          document.getElementById(id).className = "bg-green-400 text-white text-center py-2 px-4 rounded";
-        } else if (index === currentSectionIndex) {
-          document.getElementById(id).className = "bg-yellow-400 text-white text-center py-2 px-4 rounded";
-        } else {
-          document.getElementById(id).className = "bg-white text-gray-800 text-center py-2 px-4 rounded shadow";
-        }
-      });
+function updateSectionTabs() {
+  // Update the color of tabs based on their completion status.
+  const tabIds = ['aboutYouTab', 'coreValuesTab', 'strengthTab', "skillsAssessmentTab", "dreamjobTab", "preferencesTab", "prioritiesTab"]; // Add more as needed
+  tabIds.forEach((id, index) => {
+    if (index < currentSectionIndex) {
+      document.getElementById(id).className = "bg-green-400 text-white text-center py-2 px-4 rounded";
+    } else if (index === currentSectionIndex) {
+      document.getElementById(id).className = "bg-yellow-400 text-white text-center py-2 px-4 rounded";
+    } else {
+      document.getElementById(id).className = "bg-white text-gray-800 text-center py-2 px-4 rounded shadow";
     }
+  });
+}
+
+function addMoreRepeatableGroup(groupIndex) {
+  const repeatableGroup = sections[currentSectionIndex].questions[groupIndex];
+  if (repeatableGroup && repeatableGroup.type === "repeatableGroup") {
+    // Increment counter for this group or initialize if not exist
+    repeatableGroupCounter[groupIndex] = (repeatableGroupCounter[groupIndex] || 0) + 1;
+    const newGroupIndex = `${groupIndex}_${repeatableGroupCounter[groupIndex]}`; // Create a unique index for the new group
+
+    const questionsContainer = document.getElementById('questionsContainer');
+    const groupDiv = document.createElement('div');
+    groupDiv.setAttribute('id', `repeatableGroup-${newGroupIndex}`);
+    groupDiv.className = 'repeatable-group';
+
+    repeatableGroup.questions.forEach((question, index) => {
+      const uniqueId = `${repeatableGroup.baseId}-${newGroupIndex}-${index}`;
+      const questionHTML = createSubQuestionHTML(question, uniqueId);
+      groupDiv.appendChild(questionHTML);
+    });
+
+    const addMoreBtn = document.createElement('button');
+    addMoreBtn.textContent = 'Add More';
+    addMoreBtn.className = 'mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600';
+    addMoreBtn.onclick = function() {
+      addMoreRepeatableGroup(groupIndex);
+    };
+    groupDiv.appendChild(addMoreBtn);
+
+    questionsContainer.appendChild(groupDiv);
+  }
+
+}
+
+function createSubQuestionHTML(question, uniqueId) {
+  const questionDiv = document.createElement('div');
+  questionDiv.className = 'question';
+
+  const label = document.createElement('label');
+  label.setAttribute('for', uniqueId);
+  label.className = 'block text-gray-700 text-sm font-bold mb-2';
+  label.textContent = question.label;
+
+  const input = document.createElement('input');
+  input.type = question.type;
+  input.id = uniqueId;
+  input.placeholder = question.label;
+  input.className = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
+
+  input.addEventListener('change', function() {
+    saveResponse(uniqueId, input.value); // Adjust this if necessary to fit your response handling
+  });
+
+  questionDiv.appendChild(label);
+  questionDiv.appendChild(input);
+
+  return questionDiv;
+}
+
+function updateRatingBar(ratingBar, selectedRating) {
+  const ratingItems = ratingBar.querySelectorAll('.rating-item');
+  ratingItems.forEach((item, index) => {
+    if (index < selectedRating) {
+      item.classList.add('selected');
+    } else {
+      item.classList.remove('selected');
+    }
+  });
+}
+
+
     
-    function createQuestionHTML(question) {
+function createQuestionHTML(question, parentIndex = "") {
   if (question.type === "group") {
-    // Handling grouped questions (for Exercise 2)
     const groupDiv = document.createElement('div');
     groupDiv.className = 'question-group';
+
     question.questions.forEach(subQuestion => {
-      const questionContent = createQuestionHTML(subQuestion); // Recursively call to generate each input
-      groupDiv.appendChild(questionContent);
+      const subQuestionHTML = createQuestionHTML(subQuestion, `${parentIndex}-${subQuestion.id}`);
+      groupDiv.appendChild(subQuestionHTML);
     });
+
     return groupDiv;
-  } else {
+  } else if (question.type === "repeatableGroup") {
+    const groupContainer = document.createElement('div');
+    groupContainer.className = 'question-group';
+    const groupId = `repeatableGroup-${parentIndex}-${question.baseId}`;
+    groupContainer.setAttribute('id', groupId);
+
+    question.questions.forEach((subQuestion, index) => {
+      const uniqueId = `${question.baseId}-${parentIndex}-${index}`;
+      const questionDiv = createSubQuestionHTML(subQuestion, uniqueId);
+      groupContainer.appendChild(questionDiv);
+    });
+
+    const addMoreBtn = document.createElement('button');
+    addMoreBtn.textContent = 'Add More';
+    addMoreBtn.className = 'mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600';
+    addMoreBtn.onclick = function() {
+      addMoreRepeatableGroup(parentIndex.split('-')[1]); // Extract group index from parentIndex
+    };
+    groupContainer.appendChild(addMoreBtn);
+
+    return groupContainer;
+
+  }
+  else if (question.type === "section") {
+    const sectionContainer = document.createElement('div');
+    sectionContainer.className = 'section-container';
+
+    const sectionTitle = document.createElement('h2');
+    sectionTitle.textContent = question.title;
+    sectionTitle.className = 'section-title';
+    sectionContainer.appendChild(sectionTitle);
+
+    question.questions.forEach(subQuestion => {
+      const subQuestionHTML = createQuestionHTML(subQuestion, `${parentIndex}-${subQuestion.id}`);
+      sectionContainer.appendChild(subQuestionHTML);
+    });
+
+    return sectionContainer;
+  }
+
+  else if (question.type === "rating") {
+    const ratingContainer = document.createElement('div');
+    ratingContainer.className = 'rating-container';
+
+    const ratingLabel = document.createElement('label');
+    ratingLabel.textContent = question.label;
+    ratingLabel.className = 'rating-label';
+    ratingContainer.appendChild(ratingLabel);
+
+    const ratingBar = document.createElement('div');
+    ratingBar.className = 'rating-bar';
+    for (let i = 1; i <= 8; i++) {
+      const ratingItem = document.createElement('span');
+      ratingItem.textContent = i;
+      ratingItem.className = 'rating-item';
+      ratingItem.addEventListener('click', () => {
+        saveResponse(`${question.id}-rating`, i);
+        updateRatingBar(ratingBar, i);
+      });
+      ratingBar.appendChild(ratingItem);
+    }
+    ratingContainer.appendChild(ratingBar);
+
+    const explanationLabel = document.createElement('label');
+    explanationLabel.textContent = question.explanationLabel;
+    explanationLabel.className = 'explanation-label';
+    ratingContainer.appendChild(explanationLabel);
+
+    const explanationInput = document.createElement('textarea');
+    explanationInput.className = 'explanation-input';
+    explanationInput.addEventListener('input', () => {
+      saveResponse(`${question.id}-explanation`, explanationInput.value);
+    });
+    ratingContainer.appendChild(explanationInput);
+
+    return ratingContainer;
+  } 
+  
+  else {
     // Standard question handling
     const questionDiv = document.createElement('div');
     questionDiv.className = 'question';
-    
+
     const label = document.createElement('label');
     label.setAttribute('for', question.id);
     label.className = 'block text-gray-700 text-sm font-bold mb-2';
     label.textContent = question.label;
-  
+
     const input = document.createElement('input');
     input.type = question.type;
     input.id = question.id;
     input.placeholder = question.label;
     input.className = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
-  
+
     input.addEventListener('change', function() {
-    saveResponse(question.id, input.value); // Save response when input changes
-  });
+      saveResponse(question.id, input.value);
+    });
 
     questionDiv.appendChild(label);
     questionDiv.appendChild(input);
-    
+
     return questionDiv;
   }
 }
-
 
 
 function showQuestion(index) {
