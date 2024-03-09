@@ -408,18 +408,23 @@ function displayProcessedResponses() {
     let content = '<h2 class="text-xl font-semibold mb-4">Processed Responses</h2>';
     content += '<ul>';
 
-    // Iterate through userResponses to build content
-    for (const [questionId, response] of Object.entries(userResponses)) {
-        // For simplicity, we're directly using questionId and response
-        // In a real application, you might want to map questionId to a more readable format or question text
-        content += `<li><strong>${questionId}:</strong> ${response}</li>`;
-    }
+    // Iterate through sections to match question ID with its text
+    sections.forEach((section) => {
+        section.questions.forEach((question) => {
+            // Construct the key to match in userResponses
+            const questionId = question.id;
+            const response = userResponses[questionId];
+
+            if (response) { // Check if there's a response for this question
+                content += `<li><strong>${question.label}:</strong> ${response}</li>`;
+            }
+        });
+    });
 
     content += '</ul>';
-
-    // Set the processed content
     processedDiv.innerHTML = content;
 }
+
 
 
 function createSubQuestionHTML(question, uniqueId) {
