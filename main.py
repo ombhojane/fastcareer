@@ -1,10 +1,14 @@
 import json
+import re
 import requests
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 import google.generativeai as genai
+from fastapi.responses import RedirectResponse
+
+
 
 # Placeholder for your API key - securely manage this in your actual application
 API_KEY = "AIzaSyCA4__JMC_ZIQ9xQegIj5LOMLhSSrn3pMw"
@@ -22,16 +26,12 @@ async def read_root(request: Request):
 async def read_service(request: Request):
     return templates.TemplateResponse("service.html", {"request": request})
 
-@app.post("/submit_about_you/")
-async def submit_about_you(request: Request, name: str = Form(...), mobile: str = Form(...), email: str = Form(...)):
-    # Here you would process the form data (e.g., validate, save to database)
-    print(name, mobile, email)  # For demonstration, just printing to the console
-
-    # Simulate progression logic and response
-    return JSONResponse(content={"progress": "100%", "nextSection": "Hair Health", "message": "About You section completed. Proceed to Hair Health."})
-
 def construct_comprehensive_prompt(data):
+    if 'About You' in data:
+        about_you_details = data['About You']
+    
     prompt_parts = [
+        f"Basic information about theus user: {json.dumps(data['about_you'], ensure_ascii=False)}"
         "Given an individual's career aspirations, core values, strengths, preferences, and skills, provide a comprehensive analysis that identifies key strengths, aligns these with career values, and suggests career paths. Then, recommend the top 5 job descriptions that would be a perfect fit based on the analysis. Here are the details:",
         f"Career Priorities: {json.dumps(data['career_priorities'], ensure_ascii=False)}",
         f"Core Values: {json.dumps(data['core_values'], ensure_ascii=False)}",  
@@ -82,15 +82,66 @@ def call_gemini(prompt):
     response_text = response.text
     return response_text
 
+analysis_data_store = {}
+
+def format_gemini_response(text):
+   
+    # Use regular expressions to replace **text** with <strong>text</strong>
+    formatted_text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
+    return formatted_text
 
 @app.post('/analyze')
-async def analyze(data: dict):
+async def analyze(request: Request):
     try:
+        data = await request.json()
         prompt = construct_comprehensive_prompt(data)
+        print("Constructed prompt:", prompt)        
         analysis_result = call_gemini(prompt)
+        print("Analysis result:", analysis_result)
+        analysis_data_store['latest_analysis'] = analysis_result
         return {"analysis": analysis_result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post('/generate-linkedin-profile')
+async def generate_linkedin_profile():
+    analysis_result = analysis_data_store.get('latest_analysis', None)
+    if not analysis_result:
+        raise HTTPException(status_code=404, detail="No analysis data found.")
+    
+    linkedin_prompt = f"""
+    Based on the following inputs, generate a professional bio and a short header bio that could be used on LinkedIn.
+    {analysis_result}
+    Provide optimized content for a LinkedIn Bio, Header Bio, Experience, Skills, Certifications. (dont give education section)
+    """
+    
+    linkedin_content = call_gemini(linkedin_prompt) 
+    return {"linkedinContent": linkedin_content}
 
+@app.post('/generate-resume')
+async def generate_resume():
+    analysis_result = analysis_data_store.get('latest_analysis', None)
+    if not analysis_result:
+        raise HTTPException(status_code=404, detail="No analysis data found.")
+
+    about_you_data = analysis_data_store.get('about_you', {})
+    about_you_prompt_part = f"Basic information about the user: {json.dumps(about_you_data, ensure_ascii=False)}"
+
+    resume_prompt = f"""
+    {about_you_prompt_part}
+
+    Based on the following inputs, print the basic details in proper manner line by line (name, github url, etc), generate a professional resume that includes sections for a Summary, Experience, Skills, Certifications (dont give education section).
+    {analysis_result}
+    Provide optimized content for each section of the resume to highlight the individual's qualifications, achievements, and career progression.
+    """
+    
+    resume_content = call_gemini(resume_prompt) 
+
+    resumes = format_gemini_response(resume_content)
+    
+    return {"resumeContent": resumes}
+
+
+  
 if __name__ == '__main__':
     app.run(debug=True)

@@ -2,23 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.analysis-section {
-  background-color: #f9fafb; /* Light gray background */
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin-top: 1rem;
+/* Increase font size for questions and add spacing */
+.question-container h2, .question label, .radio-container h3, .rating-label, .section-title {
+  font-size: 1.25rem; /* Increased font size */
+  margin-bottom: 0.5rem; /* Ensure some space between the question and the input */
 }
 
-.analysis-result p, .analysis-result ul {
-  margin-bottom: 1rem;
+/* Add space between question and input */
+.question-container p, .question, .radio-container, .rating-container, .section-container {
+  margin-bottom: 1rem; /* Adjust as needed */
 }
 
-.analysis-result strong {
-  font-weight: bold;
+/* Style for input boxes to appear as underlines only */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid gray; /* Solid underline */
+  border-radius: 0; /* Remove any border radius */
+  padding: 8px 0; /* Adjust padding as needed */
 }
 
-.analysis-result ul {
-  list-style-type: disc;
-  margin-left: 1.5rem;
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  outline: none;
+  border-bottom-color: green; /* Change underline color on focus */
+}
+
+/* Adjustments for better spacing and alignment */
+.max-w-2xl {
+  max-width: 640px; /* Adjust based on your layout needs */
+  margin: auto;
+  padding: 20px;
+}
+
+.flex.flex-col.items-center.justify-center.max-w-4xl {
+  margin-bottom: 20px; /* Add more space below sections */
 }

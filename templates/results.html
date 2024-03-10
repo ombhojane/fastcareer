@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results Page</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Ensure you link to your CSS file -->
+</head>
+<body>
+    <main>
+        <div id="analysisSection" class="mt-10">
+            <h2 class="text-xl font-semibold mb-4">Analysis</h2>
+            <button id="analyzeBtn" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">Analyze Responses</button>
+            <div id="analysisResult" class="mt-4 bg-white p-4 rounded-lg shadow-md" style="min-width: 100%;">
+            </div>
+        </div>
+
+        <section class="mt-10">
+            <h3 class="text-xl font-semibold mb-4">LinkedIn Profile Generation</h3>
+            <button id="generateLinkedInProfile" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">Generate LinkedIn Profile</button>
+            <div id="linkedinProfileContent" class="mt-4 bg-white p-4 rounded-lg shadow-md"></div>
+        </section>
+
+        <section class="mt-10">
+            <h3 class="text-xl font-semibold mb-4">Resume Generation</h3>
+            <button id="generateResume" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700 transition-colors duration-300">Generate Resume</button>
+            <div id="resumeContent" class="mt-4 bg-white p-4 rounded-lg shadow-md"></div>
+        </section>
+    </main>
+
+    <script src="/static/js/script.js"></script> <!-- JavaScript file for handling results page functionality -->
+</body>
+</html>
