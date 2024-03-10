@@ -75,6 +75,13 @@
   
   <button id="processBtn" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Process Responses</button>
 
+  <div id="analysisSection" class="analysis-section mt-8">
+    <h2 class="text-xl font-semibold">Analysis</h2>
+    <div id="analysisResult" class="mt-4"></div>
+  </div>
+  
+  <button id="analyzeBtn" class="mt-4 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700">Analyze Responses</button>
+  
   
 </div>
 <script>
@@ -647,7 +654,99 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+function prepareDataForAnalysis() {
+    const dataForAnalysis = sections.reduce((acc, section) => {
+        // Initialize section data as an empty array if not already present
+        acc[section.title] = acc[section.title] || [];
+        section.questions.forEach(question => {
+            const response = userResponses[question.id];
+            if (response) {
+                acc[section.title].push({ question: question.label, response: response });
+            }
+        });
+        return acc;
+    }, {});
 
+    return dataForAnalysis;
+}
+
+
+function performAnalysis() {
+    const data = prepareDataForAnalysis();
+    // Assume you have an endpoint '/analyze' set up on your server
+    fetch('/analyze', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        displayAnalysisResults(data.analysis);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+
+function displayAnalysisResults(analysis) {
+    const analysisDiv = document.getElementById('analysisSection');
+    analysisDiv.innerHTML = `<pre>${analysis}</pre>`; // Display the analysis result
+}
+
+async function analyzeResponses() {
+    const dataForAnalysis = prepareDataForAnalysis();
+
+    // Assuming your backend is ready to receive and process this data
+    const response = await fetch('/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataForAnalysis)
+    });
+
+    const analysisResult = await response.json();
+
+    // Display the analysis result in the analysisSection
+    document.getElementById('analysisResult').innerHTML = `<pre>${JSON.stringify(analysisResult, null, 2)}</pre>`;
+}
+
+
+function prepareDataForAnalysis() {
+    const data = {
+        career_priorities: {},
+        core_values: {},
+        strengths: {},
+        dream_job: {},
+        preferences: {},
+        skills_experience: {}
+    };
+
+    // Populate data object with user responses
+    sections.forEach(section => {
+        section.questions.forEach(question => {
+            let key = section.title.toLowerCase().replace(/\s+/g, '_');
+            if (!data[key]) {
+                data[key] = {};
+            }
+            const response = userResponses[question.id];
+            if (response) {
+                data[key][question.label] = response;
+            }
+        });
+    });
+
+    return data;
+}
+
+function displayAnalysisResults(analysis) {
+    const analysisDiv = document.getElementById('analysisSection');
+    analysisDiv.innerHTML = `<pre>${analysis}</pre>`; // Display the analysis result
+}
+
+document.getElementById('analyzeBtn').addEventListener('click', analyzeResponses);
 
 
 function showQuestion(index) {
