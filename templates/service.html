@@ -72,7 +72,8 @@
     <div id="processedResponses" class="processed-responses">
       <!-- Processed responses will be displayed here -->
   </div>
-  <button id="processBtn" class="process-btn">Process Responses</button>
+  
+  <button id="processBtn" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Process Responses</button>
 
   
 </div>
@@ -84,6 +85,7 @@ let repeatableGroupCounter = {};
 
     const sections = [
       { // About You Section
+        title: "About You",
         questions: [
           { label: "What is your name?", type: "text", id: "name" },
           { label: "What is your mobile number?", type: "number", id: "mobile" },
@@ -93,6 +95,7 @@ let repeatableGroupCounter = {};
         ]
       },
       { // Core Values Section
+        title: "Core Values",
         questions: [
           { label: "What annoys you or gets under your skin at work?", type: "text", id: "annoyance" },
           { label: "What brings you joy in your work?", type: "text", id: "joy" },
@@ -101,6 +104,7 @@ let repeatableGroupCounter = {};
         ]
       },
       { // Strength Section modified with grouped questions for Exercise 2
+        title: "Strength",
     questions: [
       { label: "Strength Exercise 1 - Self Assessment: What do you enjoy the most?", type: "text", id: "enjoyMost" },
       { label: "What am I called on to do most often?", type: "text", id: "calledOn" },
@@ -131,7 +135,7 @@ let repeatableGroupCounter = {};
           }
     ]
   },
-  {
+  {title: "Skills and Experience",
     // Skills and Experience Exercise Section
     questions: [
       {
@@ -158,6 +162,7 @@ let repeatableGroupCounter = {};
   },
 
   {//dream job
+    title: "Dream job",
     questions: [
       {
         label: "If there were no restrictions (for example, education, location, experience, or financial obligations), my dream job would be:",
@@ -203,6 +208,7 @@ let repeatableGroupCounter = {};
   },
   {
     // Preference Section
+    title: "Preferences",
     questions: [
       {
         type: "section",
@@ -249,6 +255,7 @@ let repeatableGroupCounter = {};
   },
   {
     // Career Priorities Section
+    title: "Career Priorities",
     questions: [
       {
         label: "Rate and Explain: Money",
@@ -406,22 +413,27 @@ function displayProcessedResponses() {
     processedDiv.innerHTML = ''; // Clear previous content
 
     let content = '<h2 class="text-xl font-semibold mb-4">Processed Responses</h2>';
-    content += '<ul>';
 
-    // Iterate through sections to match question ID with its text
     sections.forEach((section) => {
-        section.questions.forEach((question) => {
-            // Construct the key to match in userResponses
-            const questionId = question.id;
-            const response = userResponses[questionId];
+        let sectionResponsesExist = false;
+        let sectionContent = `<h3 class="text-lg font-semibold mt-4 mb-2">${section.title}</h3><ul>`;
 
-            if (response) { // Check if there's a response for this question
-                content += `<li><strong>${question.label}:</strong> ${response}</li>`;
+        section.questions.forEach((question) => {
+            const response = userResponses[question.id];
+            if (response) { // Only add if there's a response
+                sectionResponsesExist = true;
+                sectionContent += `<li><strong>${question.label}:</strong> ${response}</li>`;
             }
         });
+
+        sectionContent += '</ul>';
+
+        // Only add the section content if there are responses in this section
+        if (sectionResponsesExist) {
+            content += sectionContent;
+        }
     });
 
-    content += '</ul>';
     processedDiv.innerHTML = content;
 }
 
@@ -623,9 +635,10 @@ function displayResponses() {
 document.getElementById('saveBtn').addEventListener('click', saveResponses);
 document.getElementById('displayBtn').addEventListener('click', displayResponses);
 
-document.getElementById('processBtn').addEventListener('click', function() {
-    displayProcessedResponses();
-});
+document.getElementById('processBtn').addEventListener('click', displayProcessedResponses);
+
+
+
 
 
 loadResponses();
