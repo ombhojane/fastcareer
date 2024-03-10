@@ -3,72 +3,22 @@
 @tailwind utilities;
 
 
+.analysis-section {
+  background-color: #f9fafb; /* Light gray background */
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 1rem;
+}
 
-.question-section {
-    margin-top: 2rem; /* Adds space above the question section */
-  }
-  /* Styles for the progress bar */
-  #progressBar {
-    height: 18px;
-    background-color: #f3f4f6; /* Light grey */
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-  }
-  #progressBarInner {
-    height: 100%;
-    background-color: #10b981; /* Tailwind's green-500 */
-    width: 0%; /* Initial width */
-    border-radius: 8px;
-    transition: width 0.3s ease;
-  }
-  #progressCounter {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-weight: bold;
-    color: #4b5563; /* Tailwind's gray-700 */
-  }
+.analysis-result p, .analysis-result ul {
+  margin-bottom: 1rem;
+}
 
-  
-.rating-container {
-    margin-bottom: 1rem;
-  }
-  
-  .rating-label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-  
-  .rating-bar {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-  }
-  
-  .rating-item {
-    cursor: pointer;
-    padding: 0.25rem 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 0.25rem;
-  }
-  
-  .rating-item.selected {
-    background-color: #10b981;
-    color: #fff;
-  }
-  
-  .explanation-label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-  
-  .explanation-input {
-    width: 100%;
-    min-height: 100px;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 0.25rem;
-    resize: vertical;
-  }
+.analysis-result strong {
+  font-weight: bold;
+}
+
+.analysis-result ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+}

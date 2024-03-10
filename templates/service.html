@@ -82,7 +82,11 @@
   
   <button id="analyzeBtn" class="mt-4 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700">Analyze Responses</button>
   
-  
+  <div id="analysisResult" class="analysis-result">
+    <!-- Formatted analysis will be displayed here -->
+</div>
+
+
 </div>
 <script>
     let currentQuestionIndex = 1;
@@ -697,6 +701,37 @@ function displayAnalysisResults(analysis) {
     analysisDiv.innerHTML = `<pre>${analysis}</pre>`; // Display the analysis result
 }
 
+function displayFormattedAnalysis(analysisText) {
+    // Split the analysis text into paragraphs
+    const paragraphs = analysisText.split('\n\n');
+
+    let formattedAnalysis = '';
+
+    paragraphs.forEach(paragraph => {
+        // Check for list items within paragraphs
+        const listItems = paragraph.match(/- (.*)/g);
+
+        if (listItems) {
+            // If list items exist, format them
+            formattedAnalysis += '<ul>';
+            listItems.forEach(item => {
+                // Bold text wrapped in **
+                const formattedItem = item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                formattedAnalysis += `<li>${formattedItem}</li>`;
+            });
+            formattedAnalysis += '</ul>';
+        } else {
+            // Bold text wrapped in **
+            const formattedParagraph = paragraph.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            formattedAnalysis += `<p>${formattedParagraph}</p>`;
+        }
+    });
+
+    // Set the formatted analysis to the innerHTML of the analysis result section
+    document.getElementById('analysisResult').innerHTML = formattedAnalysis;
+}
+
+// Replace the direct assignment in analyzeResponses with a call to this new function
 async function analyzeResponses() {
     const dataForAnalysis = prepareDataForAnalysis();
 
@@ -709,10 +744,9 @@ async function analyzeResponses() {
 
     const analysisResult = await response.json();
 
-    // Display the analysis result in the analysisSection
-    document.getElementById('analysisResult').innerHTML = `<pre>${JSON.stringify(analysisResult, null, 2)}</pre>`;
+    // Use the new function to display the analysis result
+    displayFormattedAnalysis(analysisResult.analysis);
 }
-
 
 function prepareDataForAnalysis() {
     const data = {
