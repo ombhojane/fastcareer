@@ -29,20 +29,20 @@ async def read_service(request: Request):
 def construct_comprehensive_prompt(data):
     if 'About You' in data:
         about_you_details = data['About You']
-    
+
     prompt_parts = [
-        f"Basic information about theus user: {json.dumps(data['about_you'], ensure_ascii=False)}"
+        "Basic information about the user: {}".format(json.dumps(data.get('about_you', {}), ensure_ascii=False)),
         "Given an individual's career aspirations, core values, strengths, preferences, and skills, provide a comprehensive analysis that identifies key strengths, aligns these with career values, and suggests career paths. Then, recommend the top 5 job descriptions that would be a perfect fit based on the analysis. Here are the details:",
-        f"Career Priorities: {json.dumps(data['career_priorities'], ensure_ascii=False)}",
-        f"Core Values: {json.dumps(data['core_values'], ensure_ascii=False)}",  
+        "Career Priorities: {}".format(json.dumps(data.get('career_priorities', {}), ensure_ascii=False)),
+        "Core Values: {}".format(json.dumps(data.get('core_values', {}), ensure_ascii=False)),  
         "Rate the user's career priorities out of 100 and provide justification:",
-        f"Strengths: {json.dumps(data['strengths'], ensure_ascii=False)}",
+        "Strengths: {}".format(json.dumps(data.get('strengths', {}), ensure_ascii=False)),
         "Rate the user's strengths out of 100 and provide justification:",        
-        f"Dream Job Information: {json.dumps(data['dream_job'], ensure_ascii=False)}",
+        "Dream Job Information: {}".format(json.dumps(data.get('dream_job', {}), ensure_ascii=False)),
         "Rate the user's dream job alignment out of 100 and provide justification:",               
-        f"Preferences: {json.dumps(data['preferences'], ensure_ascii=False)}",
+        "Preferences: {}".format(json.dumps(data.get('preferences', {}), ensure_ascii=False)),
         "Rate the user's preferences out of 100 and provide justification:",
-        f"Skills and Experience: {json.dumps(data['skills_experience'], ensure_ascii=False)}",
+        "Skills and Experience: {}".format(json.dumps(data.get('skills_experience', {}), ensure_ascii=False)),
         "Rate the user's skills and experience out of 100 and provide justification:",
         "Based on the analysis, suggest 2-3 areas for mindful upskilling and professional development for the user, along with relevant certifications that would help strengthen their profile:",
         "Consider the following in the further analysis:",
@@ -50,6 +50,7 @@ def construct_comprehensive_prompt(data):
         "- Based on the preferences, what work environment or company culture would be most suitable?",
         "Conclude with recommendations for the top 5 open job descriptions in India aligned to the user's goals, including any specific industries or companies where these roles may be in demand currently.",
     ]
+
     prompt = "\n\n".join(prompt_parts)
     return prompt
 
@@ -82,12 +83,56 @@ def call_gemini(prompt):
     response_text = response.text
     return response_text
 
-analysis_data_store = {}
+analysis_data_store = {}    
 
 def format_gemini_response(text):
    
     # Use regular expressions to replace **text** with <strong>text</strong>
     formatted_text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
+    return formatted_text
+
+def format_response_for_html(response_text):
+    # Replace newline characters with <br> for HTML
+    formatted_text = response_text.replace("\n", "<br>")
+    
+    # Replace * (markdown bullet points) with HTML unordered list tags
+    bullet_point_pattern = r"\* (.*?)<br>"
+    formatted_text = re.sub(bullet_point_pattern, r"<li>\1</li>", formatted_text)
+    formatted_text = formatted_text.replace("<li>", "<ul><li>").replace("</li><br>", "</li></ul><br>")
+    
+    # Optionally, if you detect JSON structures, you can format them prettily
+    # Note: This part is optional and can be removed if not needed
+    json_pattern = r"{.*?}"
+    def format_json(match):
+        json_obj = json.loads(match.group())
+        return "<pre>" + json.dumps(json_obj, ensure_ascii=False, indent=4) + "</pre>"
+    
+    formatted_text = re.sub(json_pattern, format_json, formatted_text, flags=re.DOTALL)
+    
+    # Ensure any unclosed HTML tags are properly closed (simple approach)
+    if '<ul>' in formatted_text and '</ul>' not in formatted_text:
+        formatted_text += '</ul>'
+    
+    return formatted_text
+
+
+
+def format_response(response_text):
+    # Replace \n with newline characters
+    formatted_text = response_text.replace('\\n', '\n')
+
+    # Replace \* with bullet points
+    formatted_text = re.sub(r'\\(\*)', r'• ', formatted_text)
+
+    # Replace _text_ with *text*
+    formatted_text = re.sub(r'_([^_]+)_', r'*\1*', formatted_text)
+
+    # Replace \\*\\* with **
+    formatted_text = re.sub(r'\\(\*\\*)', r'**', formatted_text)
+
+    # Replace \\_ with _
+    formatted_text = re.sub(r'\\(_)', r'_', formatted_text)
+
     return formatted_text
 
 @app.post('/analyze')
@@ -97,6 +142,7 @@ async def analyze(request: Request):
         prompt = construct_comprehensive_prompt(data)
         print("Constructed prompt:", prompt)        
         analysis_result = call_gemini(prompt)
+        analysis_result = format_response_for_html(analysis_result)
         print("Analysis result:", analysis_result)
         analysis_data_store['latest_analysis'] = analysis_result
         return {"analysis": analysis_result}
@@ -116,6 +162,7 @@ async def generate_linkedin_profile():
     """
     
     linkedin_content = call_gemini(linkedin_prompt) 
+    linkedin_content = format_response_for_html(linkedin_content)
     return {"linkedinContent": linkedin_content}
 
 @app.post('/generate-resume')
@@ -137,11 +184,34 @@ async def generate_resume():
     
     resume_content = call_gemini(resume_prompt) 
 
-    resumes = format_gemini_response(resume_content)
+    resumes = format_response_for_html(resume_content)
     
     return {"resumeContent": resumes}
 
+@app.post('/save_responses')
+async def save_responses(request: Request):
+    data = await request.json()
+    analysis_data_store['user_responses'] = data
+    return {"message": "Responses saved successfully"}
 
+@app.get("/show_responses", response_class=HTMLResponse)
+async def show_responses(request: Request):
+    user_responses = analysis_data_store.get('user_responses', {})
+    return templates.TemplateResponse("show_responses.html", {"request": request, "user_responses": user_responses})
+
+
+@app.post("/process")
+async def process(request: Request):
+    form_data = await request.form()
+    # Process the form data as needed, for example, save it to a database
+    # For simplicity, we're just passing it along to the template
+    return templates.TemplateResponse("results_page.html", {"request": request, "data": form_data})
+
+@app.get("/results", response_class=HTMLResponse)
+async def results(request: Request):
+    # Assuming you have some logic to fetch the processed data
+    processed_data = {}  # Replace with actual data retrieval logic
+    return templates.TemplateResponse("results_page.html", {"request": request, "data": processed_data})
   
 if __name__ == '__main__':
     app.run(debug=True)

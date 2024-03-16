@@ -8,11 +8,32 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="/static/css/style.css">
 <style>
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.bg-mustard {
+    background-color: #ffdb58; /* Mustard color */
+}
+
+.question-container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.question-container {
+    padding-right: 1rem; /* Add padding to ensure text does not touch the container edges */
+    padding-left: 1rem;
+}
+
  /* Increase spacing around questions for better visual separation */
-.question label, .radio-container h3, .rating-label, .section-title {
-    font-size: 1.25rem; /* Keep the increased font size */
-    margin-top: -2rem; /* Increase space above the question */
-    margin-bottom: 2rem; /* Slightly more space below the question before input */
+ .question label, .radio-container h3, .rating-label {
+    font-size: 1rem; /* Adjust font size if needed */
+    margin-top: 0.5rem; /* Adjust top margin to avoid negative values that may cause overlap */
+    margin-bottom: 1rem; /* Adjust bottom margin for consistency */
+    display: block; /* Ensure labels are block level so they take up their own line */
+    word-break: break-word; /* Break the word at the end of the line if necessary */
 }
 
 /* Adjust space between question and input for better alignment and spacing */
@@ -32,14 +53,22 @@ textarea {
     padding-top: 8px; /* Add padding at the top for more space */
     padding-bottom: 8px; /* Ensure padding at the bottom for space within the input field */
     margin-top: 0.5rem; /* Additional space above the input field */
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus,
-input[type="email"]:focus,
-textarea:focus {
-    outline: none;
-    border-bottom-color: green; /* Highlight color on focus */
+
+.section-title {
+    white-space: nowrap; /* Keep titles in a single line */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Show ellipsis (...) when text is too long */
+    max-width: 100%; /* Ensure the max width is not more than its container */
+}
+
+.question-container p {
+    word-break: break-word; /* This will ensure that long words will break and wrap to the next line */
 }
 
 </style>
@@ -47,7 +76,7 @@ textarea:focus {
 </head>
 <body class="bg-gray-100">
   <div class="container mx-auto px-4 py-8">
-    <header class="mb-8 bg-gradient-to-r from-green-500 to-green-500 text-white py-6 px-8 rounded-lg shadow-md flex items-center justify-between">
+    <header class="mb-8 bg-gradient-to-r from-green-600 to-green-600 text-white py-6 px-8 rounded-lg shadow-md flex items-center justify-between">
       <div class="flex items-center">
         <div>
           <h1 class="font-bold text-3xl">Career Restart.</h1>
@@ -72,7 +101,7 @@ textarea:focus {
        
       <div class="flex flex-col items-center justify-center max-w-4xl mx-auto px-3 py-6">
         <div class="grid grid-cols-4 gap-6 mb-0">
-          <div id="aboutYouTab" class="bg-gradient-to-r from-green-500 text-white font-semibold text-center py-6 px-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-300">About You</div>
+          <div id="aboutYouTab" class="bg-gradient-to-r from-green-600 text-white font-semibold text-center py-6 px-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-300">About You</div>
           <div id="coreValuesTab" class="bg-white text-gray-800 font-semibold text-center py-6 px-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-100 transition-colors duration-300">Core Values</div>
           <div id="strengthTab" class="bg-white text-gray-800 font-semibold text-center py-6 px-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-100 transition-colors duration-300">Strengths</div>
           <div id="skillsAssessmentTab" class="bg-white text-gray-800 font-semibold text-center py-6 px-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-100 transition-colors duration-300">Skill Assessment</div>
@@ -100,21 +129,21 @@ textarea:focus {
           </div>
         </div>
         <div class="flex justify-center mt-10">
-          <button id="saveBtn" class="text-blue-500 bg-transparent hover:bg-blue-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center transition-colors duration-300">
-            Save Responses
+          <button id="saveBtn" class="text-green-600 bg-transparent hover:bg-blue-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center transition-colors duration-300">
+            Next
           </button>
-          <button id="displayBtn" class="text-green-500 bg-transparent hover:bg-green-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center transition-colors duration-300">
+          <button id="displayBtn" class="text-green-600 bg-transparent hover:bg-green-100 focus:outline-none font-medium py-2 px-4 rounded inline-flex items-center transition-colors duration-300">
             Display
           </button>
         </div>
       </div>
     </main>
     <div id="processedResponses" class="processed-responses max-w-2xl mx-auto px-4 mt-8"></div>
-    <button id="processBtn" ></button>
+    <button id="processBtn" > Process</button>
 
     <div id="analysisSection" class="mt-10">
       <h2 class="text-xl font-semibold mb-4">Analysis</h2>
-      <button id="analyzeBtn" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">Analyze Responses</button>
+      <button id="analyzeBtn" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">Analyze Responses</button>
 
       <div id="analysisResult" class="mt-4 bg-white p-4 rounded-lg shadow-md" style="min-width: 100%;">
       </div>
@@ -123,7 +152,7 @@ textarea:focus {
 
     <section class="mt-10">
   <h3 class="text-xl font-semibold mb-4">LinkedIn Profile Generation</h3>
-  <button id="generateLinkedInProfile" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">Generate LinkedIn Profile</button>
+  <button id="generateLinkedInProfile" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors duration-300">Generate LinkedIn Profile</button>
   <div id="linkedinProfileContent" class="mt-4 bg-white p-4 rounded-lg shadow-md">
     <!-- LinkedIn profile content will be displayed here -->
   </div>
@@ -131,7 +160,7 @@ textarea:focus {
 
 <section class="mt-10">
   <h3 class="text-xl font-semibold mb-4">Resume Generation</h3>
-  <button id="generateResume" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700 transition-colors duration-300">Generate Resume</button>
+  <button id="generateResume" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition-colors duration-300">Generate Resume</button>
   <div id="resumeContent" class="mt-4 bg-white p-4 rounded-lg shadow-md">
     <!-- Resume content will be displayed here -->
   </div>
@@ -368,6 +397,7 @@ function saveResponse(questionId, response) {
 
 
 
+
 function saveResponses() {
   const sectionQuestions = sections[currentSectionIndex].questions;
   if (currentQuestionIndex < sectionQuestions.length) {
@@ -412,19 +442,17 @@ function loadResponses() {
 
     
 function updateSectionTabs() {
-  // Update the color of tabs based on their completion status.
-  const tabIds = ['aboutYouTab', 'coreValuesTab', 'strengthTab', "skillsAssessmentTab", "dreamjobTab", "preferencesTab", "prioritiesTab"]; // Add more as needed
-  tabIds.forEach((id, index) => {
-    if (index < currentSectionIndex) {
-      document.getElementById(id).className = "bg-green-400 text-white text-center py-2 px-4 rounded";
-    } else if (index === currentSectionIndex) {
-      document.getElementById(id).className = "bg-yellow-400 text-white text-center py-2 px-4 rounded";
-    } else {
-      document.getElementById(id).className = "bg-white text-gray-800 text-center py-2 px-4 rounded shadow";
-    }
-  });
+    const tabIds = ['aboutYouTab', 'coreValuesTab', 'strengthTab', "skillsAssessmentTab", "dreamjobTab", "preferencesTab", "prioritiesTab"];
+    tabIds.forEach((id, index) => {
+        if (index < currentSectionIndex) {
+            document.getElementById(id).className = "bg-green-600 text-white text-center py-2 px-4 rounded";
+        } else if (index === currentSectionIndex) {
+            document.getElementById(id).className = "bg-mustard text-white text-center py-2 px-4 rounded"; // Updated to mustard color
+        } else {
+            document.getElementById(id).className = "bg-white text-gray-800 text-center py-2 px-4 rounded shadow";
+        }
+    });
 }
-
 function addMoreRepeatableGroup(groupIndex) {
   const repeatableGroup = sections[currentSectionIndex].questions[groupIndex];
   if (repeatableGroup && repeatableGroup.type === "repeatableGroup") {
@@ -691,9 +719,20 @@ function createQuestionHTML(question, parentIndex = "") {
   }
 }
 function attachChangeEventToInputs() {
+    document.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], input[type="radio"], textarea').forEach(input => {
+        input.addEventListener('change', function() {
+            const questionId = this.id;
+            const response = this.type === 'radio' ? this.value : this.value;
+            saveResponse(questionId, response === 'on' ? 'Yes' : response);
+            input.removeEventListener('change', handleInputChange); // Prevent multiple listeners
+            input.addEventListener('change', handleInputChange);
+
+        });
+    });
+
+
     document.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], textarea').forEach(input => {
         input.addEventListener('change', function() {
-            // Construct a unique questionId based on the input's ID
             const questionId = this.id;
             const response = this.value;
             saveResponse(questionId, response);
@@ -701,46 +740,127 @@ function attachChangeEventToInputs() {
     });
 }
 
+// function displayResponses() {
+//     const questionsContainer = document.getElementById('questionsContainer');
+//     questionsContainer.innerHTML = ''; // Clear previous content
+
+//     sections.forEach((section, sectionIndex) => {
+//         section.questions.forEach((question, questionIndex) => {
+//             const questionId = question.id; // Assuming question IDs are unique across sections
+
+//             const response = userResponses[questionId] || 'Not provided';
+
+//             const questionDiv = document.createElement('div');
+//             questionDiv.className = 'mb-4 p-4 bg-gray-100 rounded';
+
+//             const questionLabel = document.createElement('h3');
+//             questionLabel.className = 'text-lg font-semibold mb-2';
+//             questionLabel.textContent = question.label;
+//             questionDiv.appendChild(questionLabel);
+
+//             const responseText = document.createElement('p');
+//             responseText.textContent = `Answer: ${response}`;
+//             questionDiv.appendChild(responseText);
+
+//             questionsContainer.appendChild(questionDiv);
+//         });
+//     });
+// }
+
+function getQuestionTextById(questionId) {
+    let questionText = "Question not found"; // Default text in case the question ID does not match
+
+    const isExplanation = questionId.endsWith("_explanation");
+    const baseId = isExplanation ? questionId.replace("_explanation", "") : questionId;
+
+
+
+    // A helper function to search within a list of questions
+    function searchQuestions(questions, parentTitle = "") {
+        return questions.some(question => {
+            // Check if the current question is a section with nested questions
+            if (question.type === "section") {
+                // Search within the nested questions, passing down the title
+                const found = searchQuestions(question.questions, question.title);
+                if (found) return true; // If found in nested, no need to search further
+            } else if (question.id === questionId) {
+                // Match found, prepend parent title if exists
+                questionText = parentTitle ? `${parentTitle} : ${question.label}` : question.label;
+                return true; // Match found, break the search
+            }
+            return false; // Continue searching
+        });
+    }
+
+    // Start the search from the top-level sections
+    sections.some(section => {
+        return searchQuestions(section.questions);
+    });
+
+    return questionText;
+}
+
+
 function displayResponses() {
     const questionsContainer = document.getElementById('questionsContainer');
     questionsContainer.innerHTML = ''; // Clear previous content
 
-    sections.forEach((section, sectionIndex) => {
-        section.questions.forEach((question, questionIndex) => {
-            const questionId = question.id; // Assuming question IDs are unique across sections
+    Object.keys(userResponses).forEach((questionId) => {
+        const response = userResponses[questionId];
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'mb-4 p-4 bg-gray-100 rounded';
 
-            const response = userResponses[questionId] || 'Not provided';
+        const questionText = getQuestionTextById(questionId); // Fetch the full question text
 
-            const questionDiv = document.createElement('div');
-            questionDiv.className = 'mb-4 p-4 bg-gray-100 rounded';
+        const questionLabel = document.createElement('h3');
+        questionLabel.className = 'text-lg font-semibold mb-2';
+        questionLabel.textContent = questionText; // Display the full question text
+        questionDiv.appendChild(questionLabel);
 
-            const questionLabel = document.createElement('h3');
-            questionLabel.className = 'text-lg font-semibold mb-2';
-            questionLabel.textContent = question.label;
-            questionDiv.appendChild(questionLabel);
+        const responseText = document.createElement('p');
+        responseText.textContent = `Answer: ${response}`;
+        questionDiv.appendChild(responseText);
 
-            const responseText = document.createElement('p');
-            responseText.textContent = `Answer: ${response}`;
-            questionDiv.appendChild(responseText);
-
-            questionsContainer.appendChild(questionDiv);
-        });
+        questionsContainer.appendChild(questionDiv);
     });
 }
+
+
 
 document.getElementById('saveBtn').addEventListener('click', saveResponses);
 document.getElementById('displayBtn').addEventListener('click', displayResponses);
 
-document.getElementById('processBtn').addEventListener('click', displayProcessedResponses);
-
-
-
-
-
-loadResponses();
-document.addEventListener('DOMContentLoaded', function() {
-    attachChangeEventToInputs();
+document.getElementById('processBtn').addEventListener('click', async function() {
+    const userResponses = JSON.parse(localStorage.getItem("userResponses") || "{}");
+    // Send this data to the server
+    await fetch('/save_responses', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userResponses),
+    }).then(response => response.json())
+    .then(data => {
+        // Check if the responses were saved successfully
+        if(data.message === "Responses saved successfully") {
+            // Redirect if successful
+            window.location.href = '/show_responses';
+        } else {
+            console.error('Failed to save responses');
+        }
+    })
+    .catch(error => console.error('Error:', error));
 });
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadResponses(); // Load saved responses if any
+    attachChangeEventToInputs(); // Attach change events to inputs
+    showQuestion(currentQuestionIndex); // Show the first question
+});
+
+
 
 document.getElementById("generateLinkedInProfile").addEventListener("click", function() {
     fetch('/generate-linkedin-profile', {
@@ -894,6 +1014,15 @@ function prepareDataForAnalysis() {
     return data;
 }
 
+function handleInputChange() {
+    const questionId = this.id;
+    const response = this.type === 'radio' ? this.checked ? this.value : '' : this.value;
+    if (response) { // Check to ensure empty strings or unchecked radios don't overwrite existing responses
+        saveResponse(questionId, response);
+    }
+}
+
+
 function displayAnalysisResults(analysis) {
     const analysisDiv = document.getElementById('analysisSection');
     analysisDiv.innerHTML = `<pre>${analysis}</pre>`; // Display the analysis result
@@ -903,22 +1032,22 @@ document.getElementById('analyzeBtn').addEventListener('click', analyzeResponses
 
 
 function showQuestion(index) {
-  const questionsContainer = document.getElementById('questionsContainer');
-  questionsContainer.innerHTML = ''; // Clear previous content
+    const questionsContainer = document.getElementById('questionsContainer');
+    questionsContainer.innerHTML = ''; // Clear previous content
 
-  const section = sections[currentSectionIndex];
-  if (section.questions[index - 1].type === "group") {
-    // If the question is a group, render all its questions together
-    const groupHTML = createQuestionHTML(section.questions[index - 1]);
-    questionsContainer.appendChild(groupHTML);
-  } else {
-    // For non-grouped questions, proceed as normal
+    const section = sections[currentSectionIndex];
     const questionHTML = createQuestionHTML(section.questions[index - 1]);
-    questionsContainer.appendChild(questionHTML);
-  }
 
-  updateProgress(); // Ensure progress is updated
+    // Add animation class
+    questionHTML.classList.add('question-container');
+
+    questionsContainer.appendChild(questionHTML);
+
+    updateProgress(); // Ensure progress is updated
+
+    attachChangeEventToInputs(); 
 }
+
 
 document.getElementById('prevBtn').addEventListener('click', function() {
   // Adjusted to account for grouped questions as a single index
@@ -951,7 +1080,6 @@ document.getElementById('nextBtn').addEventListener('click', function() {
 
     
     // Initial display and setup
-    showQuestion(currentQuestionIndex);
 updateSectionTabs();
 updateProgress();
 
@@ -960,6 +1088,5 @@ console.log("Displaying responses", userResponses);
 
 
     </script>
-    
 </body>
 </html>

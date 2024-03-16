@@ -1,0 +1,22 @@
+
+save_responses.html -
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processed Responses</title>
+</head>
+<body>
+    <h1>Processed Responses</h1>
+    {% if user_responses %}
+        {% for question, response in user_responses.items() %}
+            <p><strong>{{ question }}:</strong> {{ response }}</p>
+        {% endfor %}
+    {% else %}
+        <p>No responses found.</p>
+    {% endif %}
+
+
+<script src="../static/js/script.js"></script>
+
+</body>
+</html>
